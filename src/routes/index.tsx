@@ -102,19 +102,32 @@ function Landing() {
         textAlign: "center",
       }}
     >
-      <img
-        src="/icons/icon-192x192.png"
-        alt={`${APP_NAME} logo`}
-        width={144}
-        height={144}
+      <div
+        aria-label="MiniFAT logo"
         style={{
-          width: 144,
-          height: 144,
-          borderRadius: 28,
-          boxShadow: `0 0 0 4px ${BLUE}, 0 20px 60px rgba(0,0,0,0.5)`,
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "20px 36px",
+          background: BLUE,
+          border: `2px solid ${ACCENT}`,
+          borderRadius: 20,
+          boxShadow: `0 0 0 6px rgba(180,255,60,0.08), 0 20px 60px rgba(0,0,0,0.5)`,
           marginBottom: 28,
         }}
-      />
+      >
+        <span
+          style={{
+            fontSize: 44,
+            fontWeight: 900,
+            letterSpacing: -1.5,
+            lineHeight: 1,
+          }}
+        >
+          <span style={{ color: ACCENT }}>Mini</span>
+          <span style={{ color: "#ffffff" }}>FAT</span>
+        </span>
+      </div>
       <h1
         style={{
           fontSize: 32,
