@@ -14,9 +14,9 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: APP_FULL_NAME },
-      { name: "description", content: TAGLINE },
+      { name: "description", content: `${TAGLINE_EN} · ${TAGLINE_IT}` },
       { property: "og:title", content: APP_FULL_NAME },
-      { property: "og:description", content: TAGLINE },
+      { property: "og:description", content: `${TAGLINE_EN} · ${TAGLINE_IT}` },
       { property: "og:image", content: "/icons/icon-512x512.png" },
     ],
   }),
