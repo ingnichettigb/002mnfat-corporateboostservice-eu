@@ -1,16 +1,19 @@
-## Problema
-Il logo `<img>` non si vede in preview. Soluzione semplice: niente immagine, sostituire con una "wordmark" tipografica "MiniFAT" grande e contrastata.
+## Nota
+"MiniFAT" è un nome proprio del brand → non va MAI tradotto (né in italiano né in altre lingue). Resta sempre "MiniFAT", mai "MiniGRASSO".
 
-## Cambiamento
-In `src/routes/index.tsx`, sostituire l'`<img>` del logo con un blocco wordmark:
+## Verifica codice attuale
+In `src/routes/index.tsx` il nome è già usato come brand non tradotto:
+- Logo wordmark: "Mini" + "FAT"
+- H1: "MiniFAT – Smart Dossier"
+- CTA: "Open MiniFAT / Apri MiniFAT →"
+- Prompt install EN/IT: entrambi usano "MiniFAT"
+- Footer: "© {year} MiniFAT"
 
-- Sfondo: tile arrotondato (`#0a2a4a`, blu del tema) con bordo lime `#b4ff3c` 2px e leggero glow
-- Testo: "MiniFAT" su una riga, font weight 900, letter-spacing stretto, colore lime `#b4ff3c`
-- "FAT" in bianco per contrasto interno (Mini in lime, FAT in bianco) → leggibile su qualsiasi sfondo
-- Sotto, badge piccolo "PWA" o "SMART DOSSIER" come micro-label opzionale
-- Dimensioni: ~280×96px, centrato, sostituisce esattamente l'attuale 144×144 logo
-- `aria-label="MiniFAT logo"` sul contenitore
+Nessuna stringa traduce "FAT" → "Grasso". Il codice è già corretto.
 
-Rimuovere completamente il riferimento a `/icons/icon-192x192.png` nella landing. Le icone in `public/icons/` restano comunque per manifest/apple-touch/favicon (servono dopo il deploy).
+## Azione
+1. Salvare una memoria di progetto `mem://constraints/brand-name.md` con la regola: "MiniFAT è brand name, non tradurre mai (no MiniGRASSO). Vale per tutte le lingue, tutti i futuri SaaS clonati da questo template userano la stessa regola con il loro nome."
+2. Aggiungere riga Core in `mem://index.md`: "Brand names (es. MiniFAT) non si traducono mai in nessuna lingua."
+3. Nessuna modifica al codice — già conforme.
 
-Nessun altro file viene toccato.
+Confermi così procedo?
