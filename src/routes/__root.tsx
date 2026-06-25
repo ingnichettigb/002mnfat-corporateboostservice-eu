@@ -99,6 +99,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { property: "og:image", content: "/icons/icon-512x512.png" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "MiniFAT – Smart Dossier" },
+      { name: "twitter:description", content: "SMART DOSSIER, READY FOR SITE." },
+      { name: "twitter:image", content: "/icons/icon-512x512.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
