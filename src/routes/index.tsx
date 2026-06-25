@@ -145,11 +145,22 @@ function Landing() {
           fontSize: 13,
           letterSpacing: 2,
           color: "#9fb3c8",
+          margin: "0 0 6px",
+          textTransform: "uppercase",
+        }}
+      >
+        {TAGLINE_EN}
+      </p>
+      <p
+        style={{
+          fontSize: 13,
+          letterSpacing: 2,
+          color: ACCENT,
           margin: "0 0 36px",
           textTransform: "uppercase",
         }}
       >
-        {TAGLINE}
+        {TAGLINE_IT}
       </p>
 
       <a
@@ -166,7 +177,7 @@ function Landing() {
           boxShadow: `0 8px 24px rgba(180,255,60,0.25)`,
         }}
       >
-        Apri MiniFAT →
+        Open MiniFAT / Apri MiniFAT →
       </a>
 
       {deferred && !installed && (
@@ -181,9 +192,11 @@ function Landing() {
             width: "100%",
           }}
         >
-          <p style={{ margin: "0 0 12px", fontSize: 14 }}>
-            Installa <strong>{APP_NAME}</strong> sul tuo dispositivo per
-            accesso rapido.
+          <p style={{ margin: "0 0 6px", fontSize: 14 }}>
+            Install <strong>{APP_NAME}</strong> on your device for quick access.
+          </p>
+          <p style={{ margin: "0 0 12px", fontSize: 13, color: "#9fb3c8" }}>
+            Installa <strong>{APP_NAME}</strong> sul tuo dispositivo per accesso rapido.
           </p>
           <button
             onClick={handleInstall}
@@ -198,7 +211,7 @@ function Landing() {
               fontSize: 14,
             }}
           >
-            Installa app
+            Install app / Installa app
           </button>
         </div>
       )}
@@ -215,8 +228,14 @@ function Landing() {
             color: "#dbeafe",
           }}
         >
-          📱 Per installare: tocca <strong>Condividi</strong> →{" "}
-          <strong>Aggiungi a schermata Home</strong>
+          <p style={{ margin: "0 0 6px" }}>
+            📱 To install: tap <strong>Share</strong> →{" "}
+            <strong>Add to Home Screen</strong>
+          </p>
+          <p style={{ margin: 0, color: "#9fb3c8", fontSize: 13 }}>
+            Per installare: tocca <strong>Condividi</strong> →{" "}
+            <strong>Aggiungi a schermata Home</strong>
+          </p>
         </div>
       )}
 
