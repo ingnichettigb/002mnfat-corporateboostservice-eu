@@ -16,11 +16,11 @@ export type Lang = (typeof SUPPORTED_LANGS)[number];
 
 export const APP_CONFIG = {
   /* ---------- Identità del prodotto ---------- */
-  codePrefix: "040",
-  codeName: "RegistroWEB",
-  shortName: "RegistroWEB",
-  fullName: "040RegistroWEB – Registro Siti Web Aziendali",
-  saasUrl: "https://040registroweb.corporateboostservice.eu",
+  codePrefix: "002",
+  codeName: "MiniFAT",
+  shortName: "002MiniFAT",
+  fullName: "002MiniFAT – Smart Dossier",
+  saasUrl: "https://002mnfat.corporateboostservice.eu",
 
   /* ---------- Marchio / editore ---------- */
   kicker: "CORPORATE BOOST SERVICE",
@@ -37,37 +37,25 @@ export const APP_CONFIG = {
    * tagline     = sottotitolo in maiuscolo sotto il nome
    * description = frase per meta description e manifest */
   texts: {
-    it: {
-      tagline: "REGISTRO CREDENZIALI & SITI WEB AZIENDALI",
-      description: "Registro credenziali e siti web aziendali",
-    },
-    en: {
-      tagline: "COMPANY WEB & CREDENTIALS REGISTRY",
-      description: "Registry of company websites and credentials",
-    },
-    es: {
-      tagline: "REGISTRO DE CREDENCIALES Y SITIOS WEB EMPRESARIALES",
-      description: "Registro de credenciales y sitios web de la empresa",
-    },
-    de: {
-      tagline: "REGISTER FÜR ZUGANGSDATEN & FIRMENWEBSITES",
-      description: "Register für Firmenwebsites und Zugangsdaten",
-    },
+    it: { tagline: "DOSSIER INTELLIGENTE, PRONTO PER IL CANTIERE.", description: "Dossier intelligente, pronto per il cantiere" },
+    en: { tagline: "SMART DOSSIER, READY FOR SITE.", description: "Smart dossier, ready for site" },
+    es: { tagline: "DOSSIER INTELIGENTE, LISTO PARA LA OBRA.", description: "Dossier inteligente, listo para la obra" },
+    de: { tagline: "SMARTES DOSSIER, BEREIT FÜR DIE BAUSTELLE.", description: "Smartes Dossier, bereit für die Baustelle" },
   } satisfies Record<Lang, { tagline: string; description: string }>,
 
   /* ---------- Testi disegnati nell'icona (uguali in tutte le lingue) ---------- */
   icon: {
-    top: "040", // grande, colore accent
-    mid: "WEB", // medio, colore testo
-    bottom: "REGISTRO SITI WEB", // piccolo, colore cyan, nella fascia in basso
+    top: "002", // grande, colore accent
+    mid: "FAT", // medio, colore testo
+    bottom: "SMART DOSSIER", // piccolo, colore cyan, nella fascia in basso
   },
 
   /* ---------- Colori (da qui derivano icona, manifest e CSS) ---------- */
   colors: {
     accent: "#b4ff3c", // colore primario (pulsante, numero, titoli)
     cyan: "#00e5ff", // colore secondario (bordi, globo, kicker)
-    blue: "#0a2444", // blu profondo (pannelli, theme-color)
-    bg: "#060a12", // sfondo
+    blue: "#0a2a4a", // blu profondo (pannelli, theme-color)
+    bg: "#06090f", // sfondo
     fg: "#f8fafc", // testo
   },
 

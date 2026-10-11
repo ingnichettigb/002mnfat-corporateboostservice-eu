@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Download, ExternalLink, Share, SquarePlus } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { AppIcon } from "@/components/AppIcon";
+import logoAsset from "@/assets/logo_MiniFAT.png.asset.json";
 import { Button } from "@/components/ui/button";
 import { APP_CONFIG } from "@/config";
 import { LANG_NAMES } from "@/lib/i18n-core";
@@ -79,14 +79,7 @@ function Launcher() {
       <div className="launcher-grid" aria-hidden="true" />
       <section className="launcher-card" aria-labelledby="launcher-title">
         <div className="launcher-mark">
-          <AppIcon
-            size={140}
-            aria-label={t.iconLabel.replace(
-              "{name}",
-              `${APP_CONFIG.codePrefix}${APP_CONFIG.codeName}`,
-            )}
-            role="img"
-          />
+          <img src={logoAsset.url} alt="002MiniFAT logo" width={180} height={240} className="mx-auto h-auto w-[180px] rounded-2xl" />
         </div>
 
         <div className="space-y-3">
