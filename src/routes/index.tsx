@@ -1,246 +1,165 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Download, ExternalLink, Share, SquarePlus } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const SAAS_URL = "https://002mnfat.corporateboostservice.eu";
-const APP_NAME = "MiniFAT";
-const APP_FULL_NAME = "MiniFAT – Smart Dossier";
-const TAGLINE_EN = "SMART DOSSIER, READY FOR SITE.";
-const TAGLINE_IT = "DOSSIER INTELLIGENTE, PRONTO PER IL CANTIERE.";
-const ACCENT = "#b4ff3c";
-const BG = "#06090f";
-const BLUE = "#0a2a4a";
+import logoAsset from "@/assets/logo_MiniFAT.png.asset.json";
+import { Button } from "@/components/ui/button";
+import { APP_CONFIG } from "@/config";
+import { LANG_NAMES } from "@/lib/i18n-core";
+import { useI18n } from "@/lib/i18n";
+import { initializePwa } from "@/lib/pwa";
+
+const DEFAULT_DESCRIPTION = APP_CONFIG.texts[APP_CONFIG.defaultLang].description;
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: APP_FULL_NAME },
-      { name: "description", content: `${TAGLINE_EN} · ${TAGLINE_IT}` },
-      { property: "og:title", content: APP_FULL_NAME },
-      { property: "og:description", content: `${TAGLINE_EN} · ${TAGLINE_IT}` },
-      { property: "og:image", content: "/icons/icon-512x512.png" },
+      { title: APP_CONFIG.fullName },
+      { name: "description", content: DEFAULT_DESCRIPTION },
+      { property: "og:title", content: APP_CONFIG.fullName },
+      { property: "og:description", content: DEFAULT_DESCRIPTION },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "/" }],
   }),
-  component: Landing,
+  component: Launcher,
 });
 
-type BIPEvent = Event & {
+type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 };
 
-function Landing() {
-  const [deferred, setDeferred] = useState<BIPEvent | null>(null);
-  const [installed, setInstalled] = useState(false);
-  const [isIosSafari, setIsIosSafari] = useState(false);
+function Launcher() {
+  const { lang, setLang, t, product, languages, format } = useI18n();
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [showIosInstructions, setShowIosInstructions] = useState(false);
 
   useEffect(() => {
-    // Register service worker only on production HTTPS (not Lovable preview/dev).
-    if (typeof window === "undefined") return;
-    const host = window.location.hostname;
-    const isPreview =
-      host.startsWith("id-preview--") ||
-      host.startsWith("preview--") ||
-      host.endsWith(".lovableproject.com") ||
-      host.endsWith(".lovableproject-dev.com") ||
-      host.endsWith(".beta.lovable.dev") ||
-      host === "localhost" ||
-      host === "127.0.0.1";
-    if ("serviceWorker" in navigator && !isPreview && window.isSecureContext) {
-      navigator.serviceWorker.register("/sw.js").catch(() => {});
-    } else if ("serviceWorker" in navigator && isPreview) {
-      navigator.serviceWorker.getRegistrations().then((rs) =>
-        rs.forEach((r) => {
-          if (r.active?.scriptURL.endsWith("/sw.js")) r.unregister();
-        }),
-      );
-    }
+    void initializePwa();
 
-    const ua = window.navigator.userAgent;
-    const iOS = /iPad|iPhone|iPod/.test(ua) && !("MSStream" in window);
-    const safari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS/.test(ua);
     const standalone =
       window.matchMedia("(display-mode: standalone)").matches ||
       (window.navigator as Navigator & { standalone?: boolean }).standalone === true;
-    setIsIosSafari(iOS && safari && !standalone);
-    setInstalled(standalone);
+    const userAgent = window.navigator.userAgent;
+    const isIos = /iPad|iPhone|iPod/.test(userAgent);
+    const isSafari = /Safari/.test(userAgent) && !/CriOS|FxiOS|EdgiOS/.test(userAgent);
 
-    const onBIP = (e: Event) => {
-      e.preventDefault();
-      setDeferred(e as BIPEvent);
+    setIsInstalled(standalone);
+    setShowIosInstructions(isIos && isSafari && !standalone);
+
+    const handleInstallAvailable = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as BeforeInstallPromptEvent);
     };
-    const onInstalled = () => {
-      setInstalled(true);
-      setDeferred(null);
+    const handleInstalled = () => {
+      setIsInstalled(true);
+      setInstallPrompt(null);
     };
-    window.addEventListener("beforeinstallprompt", onBIP);
-    window.addEventListener("appinstalled", onInstalled);
+
+    window.addEventListener("beforeinstallprompt", handleInstallAvailable);
+    window.addEventListener("appinstalled", handleInstalled);
     return () => {
-      window.removeEventListener("beforeinstallprompt", onBIP);
-      window.removeEventListener("appinstalled", onInstalled);
+      window.removeEventListener("beforeinstallprompt", handleInstallAvailable);
+      window.removeEventListener("appinstalled", handleInstalled);
     };
   }, []);
 
-  const handleInstall = async () => {
-    if (!deferred) return;
-    await deferred.prompt();
-    await deferred.userChoice;
-    setDeferred(null);
+  const installApp = async () => {
+    if (!installPrompt) return;
+    await installPrompt.prompt();
+    await installPrompt.userChoice;
+    setInstallPrompt(null);
   };
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: BG,
-        color: "#fff",
-        fontFamily:
-          "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "32px 20px",
-        textAlign: "center",
-      }}
-    >
-      <div
-        aria-label="MiniFAT logo"
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "20px 36px",
-          background: BLUE,
-          border: `2px solid ${ACCENT}`,
-          borderRadius: 20,
-          boxShadow: `0 0 0 6px rgba(180,255,60,0.08), 0 20px 60px rgba(0,0,0,0.5)`,
-          marginBottom: 28,
-        }}
-      >
-        <span
-          style={{
-            fontSize: 44,
-            fontWeight: 900,
-            letterSpacing: -1.5,
-            lineHeight: 1,
-          }}
-        >
-          <span style={{ color: ACCENT }}>Mini</span>
-          <span style={{ color: "#ffffff" }}>FAT</span>
-        </span>
-      </div>
-      <h1
-        style={{
-          fontSize: 32,
-          fontWeight: 800,
-          letterSpacing: -0.5,
-          margin: "0 0 8px",
-        }}
-      >
-        {APP_NAME}
-        <span style={{ color: ACCENT }}> – Smart Dossier</span>
-      </h1>
-      <p
-        style={{
-          fontSize: 13,
-          letterSpacing: 2,
-          color: "#9fb3c8",
-          margin: "0 0 6px",
-          textTransform: "uppercase",
-        }}
-      >
-        {TAGLINE_EN}
-      </p>
-      <p
-        style={{
-          fontSize: 13,
-          letterSpacing: 2,
-          color: ACCENT,
-          margin: "0 0 36px",
-          textTransform: "uppercase",
-        }}
-      >
-        {TAGLINE_IT}
-      </p>
-
-      <a
-        href={SAAS_URL}
-        style={{
-          display: "inline-block",
-          background: ACCENT,
-          color: BG,
-          fontWeight: 700,
-          padding: "14px 28px",
-          borderRadius: 12,
-          textDecoration: "none",
-          fontSize: 16,
-          boxShadow: `0 8px 24px rgba(180,255,60,0.25)`,
-        }}
-      >
-        Open MiniFAT / Apri MiniFAT →
-      </a>
-
-      {deferred && !installed && (
-        <div
-          style={{
-            marginTop: 32,
-            background: BLUE,
-            border: `1px solid ${ACCENT}40`,
-            borderRadius: 16,
-            padding: 20,
-            maxWidth: 360,
-            width: "100%",
-          }}
-        >
-          <p style={{ margin: "0 0 6px", fontSize: 14 }}>
-            Install <strong>{APP_NAME}</strong> on your device for quick access.
-          </p>
-          <p style={{ margin: "0 0 12px", fontSize: 13, color: "#9fb3c8" }}>
-            Installa <strong>{APP_NAME}</strong> sul tuo dispositivo per accesso rapido.
-          </p>
-          <button
-            onClick={handleInstall}
-            style={{
-              background: ACCENT,
-              color: BG,
-              border: "none",
-              fontWeight: 700,
-              padding: "10px 20px",
-              borderRadius: 10,
-              cursor: "pointer",
-              fontSize: 14,
-            }}
-          >
-            Install app / Installa app
-          </button>
+    <main className="launcher-shell">
+      <div className="launcher-grid" aria-hidden="true" />
+      <section className="launcher-card" aria-labelledby="launcher-title">
+        <div className="launcher-mark">
+          <img src={logoAsset.url} alt="002MiniFAT logo" width={180} height={240} className="mx-auto h-auto w-[180px] rounded-2xl" />
         </div>
-      )}
 
-      {isIosSafari && (
-        <div
-          style={{
-            marginTop: 32,
-            background: BLUE,
-            borderRadius: 16,
-            padding: 16,
-            maxWidth: 360,
-            fontSize: 14,
-            color: "#dbeafe",
-          }}
-        >
-          <p style={{ margin: "0 0 6px" }}>
-            📱 To install: tap <strong>Share</strong> →{" "}
-            <strong>Add to Home Screen</strong>
-          </p>
-          <p style={{ margin: 0, color: "#9fb3c8", fontSize: 13 }}>
-            Per installare: tocca <strong>Condividi</strong> →{" "}
-            <strong>Aggiungi a schermata Home</strong>
-          </p>
+        <div className="space-y-3">
+          <p className="launcher-kicker">{APP_CONFIG.kicker}</p>
+          <h1 id="launcher-title" className="launcher-title">
+            <span>{APP_CONFIG.codePrefix}</span>
+            {APP_CONFIG.codeName}
+          </h1>
+          <div className="launcher-rule" aria-hidden="true" />
+          {lang !== "en" && (
+            <p className="launcher-tagline launcher-tagline-secondary" lang="en">
+              {APP_CONFIG.texts.en.tagline}
+            </p>
+          )}
+          <p className="launcher-tagline launcher-tagline-primary">{product.tagline}</p>
         </div>
-      )}
 
-      <footer style={{ marginTop: 48, fontSize: 11, color: "#475569" }}>
-        © {new Date().getFullYear()} {APP_NAME}
+        <Button asChild variant="launcher" size="lg" className="mt-8 w-full sm:w-auto">
+          <a href={APP_CONFIG.saasUrl} rel="noopener noreferrer">
+            {format(t.open)}
+            <ExternalLink aria-hidden="true" />
+          </a>
+        </Button>
+
+        {installPrompt && !isInstalled && (
+          <aside className="install-panel" aria-label={t.installPanelLabel}>
+            <Download aria-hidden="true" />
+            <div className="min-w-0 flex-1 text-left">
+              <p className="install-title">{format(t.installTitle)}</p>
+              <p className="install-copy">{t.installCopy}</p>
+              <p className="install-hint">
+                {t.installHintPre}
+                <strong>{t.installHintStrong}</strong>
+                {t.installHintPost}
+              </p>
+            </div>
+            <Button type="button" variant="outline" size="sm" onClick={installApp}>
+              {t.installButton}
+            </Button>
+          </aside>
+        )}
+
+        {showIosInstructions && (
+          <aside className="install-panel" aria-label={t.iosPanelLabel}>
+            <Share aria-hidden="true" />
+            <div className="min-w-0 text-left">
+              <p className="install-title">{t.iosTitle}</p>
+              <p className="install-copy">
+                {t.iosTap}
+                <strong>{t.iosShare}</strong>
+                {t.iosThen}
+                <SquarePlus aria-hidden="true" /> <strong>{t.iosAddHome}</strong>.
+              </p>
+            </div>
+          </aside>
+        )}
+
+        {isInstalled && <p className="installed-label">{t.installed}</p>}
+      </section>
+
+      <footer className="launcher-footer">
+        <nav className="lang-switch" aria-label={t.languageLabel}>
+          {languages.map((code) => (
+            <button
+              key={code}
+              type="button"
+              lang={code}
+              title={LANG_NAMES[code]}
+              aria-label={LANG_NAMES[code]}
+              aria-pressed={code === lang}
+              data-active={code === lang}
+              onClick={() => setLang(code)}
+            >
+              {code.toUpperCase()}
+            </button>
+          ))}
+        </nav>
+        <p>
+          © {new Date().getFullYear()} {APP_CONFIG.shortName}
+        </p>
       </footer>
     </main>
   );
